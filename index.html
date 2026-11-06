@@ -718,6 +718,13 @@
     gap: 6px;
   }
 
+  button.project-link {
+    border: none;
+    background: none;
+    padding: 0;
+    font-family: inherit;
+  }
+
   .project-card.placeholder {
     align-items: center;
     justify-content: center;
@@ -872,6 +879,124 @@
     font-size: 1.05rem;
     color: var(--text);
   }
+
+  /* ---------- Checkout modal ---------- */
+  .checkout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease);
+  }
+
+  .checkout-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .checkout-box {
+    background: var(--card-solid);
+    border-radius: var(--radius);
+    max-width: 420px;
+    width: 100%;
+    padding: 28px;
+    box-shadow: 0 24px 60px rgba(17, 17, 17, 0.25);
+    transform: translateY(12px);
+    transition: transform var(--ease);
+  }
+
+  .checkout-overlay.open .checkout-box { transform: translateY(0); }
+
+  .checkout-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .checkout-head h3 { font-size: 1.2rem; }
+
+  .checkout-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent-soft);
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkout-close:hover { background: var(--accent-border); }
+
+  .checkout-item {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    background: #fbf9f4;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 18px;
+  }
+
+  .checkout-item img {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .checkout-item-info { flex: 1; min-width: 0; }
+  .checkout-item-info strong { display: block; font-size: 0.92rem; }
+  .checkout-item-info span { font-size: 0.78rem; color: var(--text-dim); }
+  .checkout-item-price { font-weight: 800; white-space: nowrap; }
+
+  .checkout-fields .field { margin-bottom: 12px; }
+
+  .checkout-note {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin: -4px 0 16px;
+  }
+
+  .checkout-pay-btn { width: 100%; }
+
+  .checkout-status {
+    font-size: 0.85rem;
+    margin-top: 12px;
+    text-align: center;
+    min-height: 1.2em;
+    color: var(--text-dim);
+  }
+
+  .checkout-status.success { color: #4d7c3a; }
+  .checkout-status.error { color: #a33; }
+
+  .checkout-alt {
+    font-size: 0.78rem;
+    text-align: center;
+    margin-top: 14px;
+    color: var(--text-dim);
+  }
+
+  .checkout-alt a { color: var(--accent-ink); font-weight: 600; }
+
+  .checkout-download {
+    display: none;
+    text-align: center;
+    margin-top: 14px;
+  }
+
+  .checkout-download.show { display: block; }
 
   /* ---------- E-book 3D cover ---------- */
   .book-stage {
@@ -1331,6 +1456,43 @@
     </div>
   </section>
 
+  <!-- CHECKOUT MODAL -->
+  <div class="checkout-overlay" id="checkoutOverlay" aria-hidden="true">
+    <div class="checkout-box" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+      <div class="checkout-head">
+        <h3 id="checkoutTitle">Checkout</h3>
+        <button type="button" class="checkout-close" id="checkoutClose" aria-label="Close checkout">&times;</button>
+      </div>
+
+      <div class="checkout-item">
+        <img id="checkoutCover" src="" alt="" />
+        <div class="checkout-item-info">
+          <strong id="checkoutItemTitle"></strong>
+          <span id="checkoutItemMeta"></span>
+        </div>
+        <span class="checkout-item-price" id="checkoutItemPrice"></span>
+      </div>
+
+      <div class="checkout-fields">
+        <div class="field">
+          <input type="email" id="checkoutEmail" placeholder="Email" required />
+        </div>
+        <div class="field">
+          <input type="text" id="checkoutName" placeholder="Name (optional)" />
+        </div>
+      </div>
+      <p class="checkout-note">Your download link and receipt go to this email.</p>
+
+      <button type="button" class="btn btn-accent checkout-pay-btn" id="checkoutPayBtn">Pay</button>
+      <p class="form-status checkout-status" id="checkoutStatus"></p>
+      <p class="checkout-download" id="checkoutDownload">
+        <a class="btn btn-accent" id="checkoutDownloadLink" href="#" download>Download your e-book</a>
+      </p>
+
+      <p class="checkout-alt">Prefer to pay by bank transfer? <a id="checkoutEmailFallback" href="#">Order via email instead</a></p>
+    </div>
+  </div>
+
   <!-- CONNECT -->
   <section id="connect">
     <div class="container">
@@ -1442,9 +1604,15 @@
 
 <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
 
+<script src="https://js.paystack.co/v1/inline.js"></script>
 <script>
 (function () {
   "use strict";
+
+  /* ---------- Checkout / payments ----------
+     Public key only — never put a Paystack SECRET key in client-side code.
+     Leave blank to keep the "Order via email" fallback as the only path. */
+  var PAYSTACK_PUBLIC_KEY = "";
 
   /* ---------- Data ---------- */
   var projects = [
@@ -1496,7 +1664,11 @@
       title: "Go2plug Handbook: Candlesticks & Chart Patterns in Trading for Beginners",
       shortTitle: "Candlestick & Chart Patterns Handbook",
       description: "A visual, beginner-friendly guide to reading candlesticks, the 10 most common candlestick patterns, support & resistance, trend direction, and continuation/reversal chart patterns.",
+      format: "E-book · PDF",
+      cover: "ebook-cover.jpg",
       price: "₦7,000",
+      amount: 700000,
+      file: "go2plug-candlestick-handbook.pdf",
       link: "mailto:ebiesuwaoluwatobi@gmail.com?subject=" +
         encodeURIComponent("Go2plug Candlestick Handbook — Purchase (₦7,000)") +
         "&body=" + encodeURIComponent("Hi Steve,\n\nI'd like to buy the Go2plug Candlestick & Chart Patterns Handbook for ₦7,000.\n\nPlease send payment details.\n\nThanks!")
@@ -1582,7 +1754,7 @@
 
   /* ---------- Render e-books ---------- */
   var ebooksGrid = document.getElementById("ebooksGrid");
-  ebooksGrid.innerHTML = ebooks.map(function (b) {
+  ebooksGrid.innerHTML = ebooks.map(function (b, i) {
     return (
       '<div class="project-card reveal">' +
         '<div class="book-stage"><div class="book">' +
@@ -1595,12 +1767,106 @@
           '<p>' + b.description + '</p>' +
           '<div class="product-foot">' +
             '<span class="product-price">' + b.price + '</span>' +
-            '<a class="project-link" href="' + b.link + '">Order via email <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>' +
+            '<button type="button" class="project-link" data-ebook-index="' + i + '">Get the e-book <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></button>' +
           '</div>' +
         '</div>' +
       '</div>'
     );
   }).join("");
+
+  /* ---------- Checkout modal ---------- */
+  var checkoutOverlay = document.getElementById("checkoutOverlay");
+  var checkoutClose = document.getElementById("checkoutClose");
+  var checkoutCover = document.getElementById("checkoutCover");
+  var checkoutItemTitle = document.getElementById("checkoutItemTitle");
+  var checkoutItemMeta = document.getElementById("checkoutItemMeta");
+  var checkoutItemPrice = document.getElementById("checkoutItemPrice");
+  var checkoutEmail = document.getElementById("checkoutEmail");
+  var checkoutName = document.getElementById("checkoutName");
+  var checkoutPayBtn = document.getElementById("checkoutPayBtn");
+  var checkoutStatus = document.getElementById("checkoutStatus");
+  var checkoutDownload = document.getElementById("checkoutDownload");
+  var checkoutDownloadLink = document.getElementById("checkoutDownloadLink");
+  var checkoutEmailFallback = document.getElementById("checkoutEmailFallback");
+  var activeEbook = null;
+
+  function openCheckout(book) {
+    activeEbook = book;
+    checkoutCover.src = book.cover || "";
+    checkoutCover.alt = book.title;
+    checkoutItemTitle.textContent = book.title;
+    checkoutItemMeta.textContent = book.format || "E-book";
+    checkoutItemPrice.textContent = book.price;
+    checkoutPayBtn.textContent = "Pay " + book.price;
+    checkoutEmailFallback.href = book.link;
+    checkoutEmail.value = "";
+    checkoutName.value = "";
+    checkoutStatus.textContent = "";
+    checkoutStatus.className = "form-status checkout-status";
+    checkoutDownload.classList.remove("show");
+    checkoutPayBtn.style.display = "";
+    checkoutOverlay.classList.add("open");
+    checkoutOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeCheckout() {
+    checkoutOverlay.classList.remove("open");
+    checkoutOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  ebooksGrid.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-ebook-index]");
+    if (!btn) { return; }
+    var book = ebooks[Number(btn.getAttribute("data-ebook-index"))];
+    if (book) { openCheckout(book); }
+  });
+
+  checkoutClose.addEventListener("click", closeCheckout);
+  checkoutOverlay.addEventListener("click", function (e) {
+    if (e.target === checkoutOverlay) { closeCheckout(); }
+  });
+
+  checkoutPayBtn.addEventListener("click", function () {
+    var email = checkoutEmail.value.trim();
+    if (!email) {
+      checkoutStatus.textContent = "Enter your email to continue.";
+      checkoutStatus.className = "form-status checkout-status error";
+      return;
+    }
+
+    if (!PAYSTACK_PUBLIC_KEY || typeof PaystackPop === "undefined") {
+      checkoutStatus.textContent = "Card payment isn't set up yet — use the email option below.";
+      checkoutStatus.className = "form-status checkout-status error";
+      return;
+    }
+
+    var book = activeEbook;
+    var handler = PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: email,
+      amount: book.amount,
+      currency: "NGN",
+      ref: "ebook_" + Date.now(),
+      metadata: {
+        custom_fields: [
+          { display_name: "Name", variable_name: "name", value: checkoutName.value.trim() || "N/A" },
+          { display_name: "E-book", variable_name: "ebook", value: book.title }
+        ]
+      },
+      callback: function () {
+        checkoutStatus.textContent = "Payment received — check your email for the Paystack receipt.";
+        checkoutStatus.className = "form-status checkout-status success";
+        checkoutPayBtn.style.display = "none";
+        checkoutDownloadLink.href = book.file;
+        checkoutDownload.classList.add("show");
+      },
+      onClose: function () {
+        checkoutStatus.textContent = "Payment cancelled.";
+        checkoutStatus.className = "form-status checkout-status";
+      }
+    });
+    handler.openIframe();
+  });
 
   /* ---------- Render social cards ---------- */
   var socialsGrid = document.getElementById("socialsGrid");
