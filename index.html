@@ -1393,7 +1393,7 @@
               <label for="website">Website</label>
               <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
             </div>
-            <button type="submit" class="btn btn-accent">
+            <button type="submit" class="btn btn-accent" id="contactSubmit">
               Send Message
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </button>
@@ -1487,44 +1487,34 @@
   var sourceProducts = [
     {
       name: "Coming soon",
-      description: "I don't have a project ready to sell yet — check back once something's polished enough to share.",
       placeholder: true
     }
   ];
 
   var ebooks = [
     {
-      title: "Shipping Full-Stack Apps Faster",
-      description: "Practical patterns for building and deploying full-stack apps with React, Node.js, and PHP — from real projects, not theory.",
-      price: "$10",
-      link: "#"
+      title: "Go2plug Handbook: Candlesticks & Chart Patterns in Trading for Beginners",
+      shortTitle: "Candlestick & Chart Patterns Handbook",
+      description: "A visual, beginner-friendly guide to reading candlesticks, the 10 most common candlestick patterns, support & resistance, trend direction, and continuation/reversal chart patterns.",
+      price: "₦7,000",
+      link: "mailto:ebiesuwaoluwatobi@gmail.com?subject=" +
+        encodeURIComponent("Go2plug Candlestick Handbook — Purchase (₦7,000)") +
+        "&body=" + encodeURIComponent("Hi Steve,\n\nI'd like to buy the Go2plug Candlestick & Chart Patterns Handbook for ₦7,000.\n\nPlease send payment details.\n\nThanks!")
     }
   ];
 
   var socialLinks = [
     {
       name: "GitHub",
-      href: "https://github.com/yourusername",
+      href: "https://github.com/florino12345",
       color: "#181717",
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.19c0 4.49 2.87 8.3 6.84 9.64.5.1.68-.22.68-.49 0-.24-.01-1.02-.01-1.85-2.78.61-3.37-1.21-3.37-1.21-.46-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.55 2.34 1.11 2.91.85.09-.65.35-1.11.63-1.36-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.27 2.75 1.05a9.36 9.36 0 0 1 5 0c1.9-1.32 2.74-1.05 2.74-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.06.36.32.68.95.68 1.92 0 1.39-.01 2.51-.01 2.85 0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.19C22 6.58 17.52 2 12 2Z"/></svg>'
     },
     {
-      name: "LinkedIn",
-      href: "https://linkedin.com/in/yourusername",
-      color: "#0A66C2",
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0ZM3.5 8.75h3.38V21H3.5V8.75Zm6.5 0h3.24v1.68h.05c.45-.85 1.56-1.75 3.2-1.75 3.42 0 4.05 2.25 4.05 5.18V21h-3.38v-5.6c0-1.34-.02-3.05-1.86-3.05-1.87 0-2.16 1.46-2.16 2.96V21H9.99V8.75Z"/></svg>'
-    },
-    {
       name: "X",
-      href: "https://x.com/yourusername",
+      href: "https://x.com/steve_tobyy",
       color: "#000000",
       icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.6 8.7L23.3 22H16.7l-5.2-6.8L5.6 22H2.5l8.1-9.3L1.7 2h6.8l4.7 6.2L18.9 2Zm-1.2 18h1.7L7.4 3.9H5.6L17.7 20Z"/></svg>'
-    },
-    {
-      name: "Telegram",
-      href: "https://t.me/yourusername",
-      color: "#26A5E4",
-      icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3 18.6 20c-.25 1.1-.9 1.37-1.83.86l-5.06-3.73-2.44 2.35c-.27.27-.5.5-1.02.5l.36-5.15L18.1 6.1c.44-.39-.1-.6-.68-.22L7.1 12.6l-5-1.56c-1.08-.34-1.1-1.08.23-1.6L20.56 3.3c.9-.33 1.69.22 1.34 1Z"/></svg>'
     }
   ];
 
@@ -1566,7 +1556,6 @@
         '<div class="project-card placeholder reveal">' +
           '<div class="project-body">' +
             '<h3>' + p.name + '</h3>' +
-            '<p>' + p.description + '</p>' +
           '</div>' +
         '</div>'
       );
@@ -1599,14 +1588,14 @@
         '<div class="book-stage"><div class="book">' +
           '<div class="book-spine"></div>' +
           '<div class="book-pages"></div>' +
-          '<div class="book-cover">' + b.title + '</div>' +
+          '<div class="book-cover">' + (b.shortTitle || b.title) + '</div>' +
         '</div></div>' +
         '<div class="project-body">' +
           '<h3>' + b.title + '</h3>' +
           '<p>' + b.description + '</p>' +
           '<div class="product-foot">' +
             '<span class="product-price">' + b.price + '</span>' +
-            '<a class="project-link" href="' + b.link + '">Get the e-book <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>' +
+            '<a class="project-link" href="' + b.link + '">Order via email <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>' +
           '</div>' +
         '</div>' +
       '</div>'
@@ -1697,11 +1686,13 @@
     revealObserver.observe(el);
   });
 
-  /* ---------- Contact form (no backend — opens a prefilled email) ---------- */
+  /* ---------- Contact form (delivered via FormSubmit, no custom backend) ---------- */
+  var CONTACT_ENDPOINT = "https://formsubmit.co/ajax/ebiesuwaoluwatobi@gmail.com";
   var form = document.getElementById("contactForm");
   var status = document.getElementById("formStatus");
   var messageField = document.getElementById("message");
   var charCount = document.getElementById("charCount");
+  var submitBtn = document.getElementById("contactSubmit");
 
   messageField.addEventListener("input", function () {
     charCount.textContent = messageField.value.length + "/5000";
@@ -1723,14 +1714,37 @@
       return;
     }
 
-    var subject = encodeURIComponent(userSubject || "Portfolio contact from " + name);
-    var body = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")");
-    window.location.href = "mailto:ebiesuwaoluwatobi@gmail.com?subject=" + subject + "&body=" + body;
+    submitBtn.disabled = true;
+    status.textContent = "Sending…";
+    status.classList.remove("success");
 
-    status.textContent = "Opening your email client to send the message…";
-    status.classList.add("success");
-    form.reset();
-    charCount.textContent = "0/5000";
+    fetch(CONTACT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        _subject: userSubject || "Portfolio contact from " + name,
+        message: message
+      })
+    })
+      .then(function (res) { if (!res.ok) { throw new Error("Request failed"); } })
+      .then(function () {
+        status.textContent = "Thanks — your message is on its way. I'll reply within 24 hours.";
+        status.classList.add("success");
+        form.reset();
+        charCount.textContent = "0/5000";
+      })
+      .catch(function () {
+        var subject = encodeURIComponent(userSubject || "Portfolio contact from " + name);
+        var body = encodeURIComponent(message + "\n\n— " + name + " (" + email + ")");
+        window.location.href = "mailto:ebiesuwaoluwatobi@gmail.com?subject=" + subject + "&body=" + body;
+        status.textContent = "Couldn't reach the server, so I opened your email client instead.";
+        status.classList.add("success");
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+      });
   });
 
   /* ---------- Footer year ---------- */
