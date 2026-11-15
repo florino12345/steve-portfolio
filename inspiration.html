@@ -340,17 +340,16 @@
   }
 
   .tree-line {
-    fill: none;
-    stroke: var(--accent);
-    stroke-width: 1.6;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-    stroke-dasharray: 9000;
-    stroke-dashoffset: 9000;
+    fill: var(--accent);
+    fill-opacity: 0;
+    stroke: none;
+    transition: fill-opacity 1s ease;
   }
 
+  .tree-line.in { fill-opacity: 0.45; }
+
   @media (prefers-reduced-motion: reduce) {
-    .tree-line { stroke-dashoffset: 0 !important; transition: none !important; }
+    .tree-line { fill-opacity: 0.45 !important; transition: none !important; }
     .tree-node-inner { opacity: 1 !important; transform: none !important; transition: none !important; }
   }
 
@@ -831,21 +830,7 @@
     revealObserver.observe(el);
   });
 
-  /* ---------- Tree draw-in animation ---------- */
-  function drawPath(path, duration, delay) {
-    if (!path) { return; }
-    var len = path.getTotalLength();
-    path.style.strokeDasharray = len;
-    path.style.strokeDashoffset = len;
-    path.getBoundingClientRect();
-    path.style.transition = "stroke-dashoffset " + duration + "ms ease " + delay + "ms";
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        path.style.strokeDashoffset = "0";
-      });
-    });
-  }
-
+  /* ---------- Tree fade-in animation ---------- */
   function showNode(id, delay) {
     var inner = document.querySelector('.tree-node[data-id="' + id + '"] .tree-node-inner');
     if (!inner) { return; }
@@ -854,13 +839,12 @@
 
   function animateTree() {
     var line = document.querySelector(".tree-line");
-
-    drawPath(line, 1400, 0);
+    if (line) { line.classList.add("in"); }
 
     showNode("steve", 150);
-    showNode("ali", 1550);
-    showNode("jobs", 1700);
-    showNode("musk", 1850);
+    showNode("ali", 650);
+    showNode("jobs", 800);
+    showNode("musk", 950);
   }
 
   var treeWrap = document.querySelector(".tree-wrap");
