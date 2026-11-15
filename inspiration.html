@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inspiration — Steve</title>
+<meta name="description" content="The people whose hustle, grind, and execution shaped how Steve builds and ships work." />
+<link rel="icon" type="image/png" href="logo.png" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Inspiration — Steve" />
+<meta property="og:description" content="The people whose hustle, grind, and execution shaped how Steve builds and ships work." />
+<meta name="twitter:card" content="summary" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    --bg: #f3eee3;
+    --card: rgba(255, 255, 255, 0.72);
+    --card-solid: #ffffff;
+    --border: rgba(17, 17, 17, 0.08);
+    --accent: #c98b22;
+    --accent-ink: #8a6a1e;
+    --accent-soft: rgba(201, 139, 34, 0.12);
+    --accent-border: rgba(200, 139, 17, 0.34);
+    --ink: #111111;
+    --text: #15181f;
+    --text-dim: #6b6b6b;
+    --radius: 16px;
+    --radius-pill: 999px;
+    --ease: 0.3s ease;
+    --nav-h: 88px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(640px 420px at 88% 6%, rgba(201, 139, 34, 0.16), transparent 70%),
+      radial-gradient(520px 420px at 6% 30%, rgba(122, 31, 43, 0.08), transparent 70%),
+      radial-gradient(900px 600px at 50% 110%, rgba(201, 139, 34, 0.10), transparent 70%);
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ul { list-style: none; }
+  img { max-width: 100%; display: block; }
+  button { font-family: inherit; cursor: pointer; }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  *:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .accent-text { color: var(--accent); }
+
+  /* ---------- Navbar ---------- */
+  .navbar {
+    position: fixed;
+    top: 16px;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+  }
+
+  .nav-inner {
+    width: 100%;
+    max-width: 1120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 28px rgba(17, 17, 17, 0.07);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: box-shadow var(--ease);
+  }
+
+  .navbar.scrolled .nav-inner {
+    box-shadow: 0 14px 32px rgba(17, 17, 17, 0.12);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+
+  .nav-links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    white-space: nowrap;
+    transition: color var(--ease);
+    padding: 4px 0;
+  }
+
+  .nav-links a svg { opacity: 0.8; }
+
+  .nav-links a.nav-support {
+    padding: 8px 16px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent-border);
+    font-weight: 600;
+    transition: background var(--ease), color var(--ease);
+  }
+
+  .nav-links a.nav-support:hover { background: var(--accent); color: #fff; }
+  .nav-links a.nav-support::after { display: none; }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width var(--ease);
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--text);
+  }
+
+  .nav-links a.active::after {
+    width: 100%;
+  }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 8px;
+  }
+
+  .nav-toggle span {
+    width: 20px;
+    height: 2px;
+    background: var(--text);
+    transition: transform var(--ease), opacity var(--ease);
+  }
+
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 980px) {
+    .nav-toggle { display: flex; }
+
+    .nav-links {
+      position: fixed;
+      top: calc(var(--nav-h) + 4px);
+      left: 16px;
+      right: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      background: rgba(255, 255, 255, 0.97);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 14px 32px rgba(17, 17, 17, 0.12);
+      max-height: 0;
+      overflow-y: auto;
+      transition: max-height var(--ease);
+    }
+
+    .nav-links.open { max-height: min(70vh, 480px); }
+
+    .nav-links a.nav-support {
+      width: auto;
+      margin: 10px 20px;
+      justify-content: center;
+      border-radius: 13px;
+      border-bottom: none;
+    }
+
+    .nav-links a {
+      width: 100%;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links a::after { display: none; }
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 26px;
+    border-radius: 13px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: transform var(--ease), background var(--ease), border-color var(--ease), color var(--ease), box-shadow var(--ease);
+  }
+
+  .btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  .btn:hover::after { left: 125%; }
+
+  .btn:hover { transform: translateY(-2px); }
+
+  .btn-accent {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 10px 24px rgba(201, 139, 34, 0.28);
+  }
+
+  .btn-accent:hover { background: #b57c1c; }
+
+  /* ---------- Inspiration hero ---------- */
+  .inspiration-hero {
+    padding: calc(var(--nav-h) + 56px) 0 20px;
+    text-align: center;
+  }
+
+  .section-tag {
+    display: inline-flex;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 7px 16px;
+    background: var(--card-solid);
+  }
+
+  .inspiration-hero h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 18px;
+  }
+
+  .inspiration-quote {
+    max-width: 620px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--text-dim);
+    border-left: 3px solid var(--accent);
+    padding-left: 16px;
+    text-align: left;
+  }
+
+  /* ---------- Tree ---------- */
+  .tree-section { padding: 40px 0 100px; }
+
+  .tree-wrap {
+    position: relative;
+    max-width: 880px;
+    margin: 0 auto;
+    aspect-ratio: 900 / 640;
+  }
+
+  .tree-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .tree-svg path {
+    fill: none;
+    stroke: var(--accent-ink);
+    stroke-width: 4;
+    stroke-linecap: round;
+    opacity: 0.55;
+  }
+
+  .tree-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .tree-node img {
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 18%;
+    border: 4px solid var(--card-solid);
+    box-shadow: 0 10px 24px rgba(17, 17, 17, 0.18);
+    transition: transform var(--ease), box-shadow var(--ease);
+  }
+
+  .tree-node:hover img {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 14px 30px rgba(17, 17, 17, 0.25);
+  }
+
+  .tree-node span {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text);
+    background: var(--card-solid);
+    padding: 5px 13px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .tree-node.tree-trunk img {
+    width: 136px;
+    height: 136px;
+    border-color: var(--accent);
+    object-position: center 15%;
+  }
+
+  @media (max-width: 640px) {
+    .tree-node img { width: 76px; height: 76px; border-width: 3px; }
+    .tree-node.tree-trunk img { width: 104px; height: 104px; }
+    .tree-node span { font-size: 0.72rem; padding: 4px 10px; }
+  }
+
+  /* ---------- Modal (shared pattern with checkout modal) ---------- */
+  .checkout-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 17, 17, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease);
+  }
+
+  .checkout-overlay.open { opacity: 1; pointer-events: auto; }
+
+  .checkout-box {
+    background: var(--card-solid);
+    border-radius: var(--radius);
+    max-width: 440px;
+    width: 100%;
+    padding: 28px;
+    box-shadow: 0 24px 60px rgba(17, 17, 17, 0.25);
+    transform: translateY(12px);
+    transition: transform var(--ease);
+  }
+
+  .checkout-overlay.open .checkout-box { transform: translateY(0); }
+
+  .checkout-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .checkout-head-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .checkout-head-info img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 18%;
+    flex-shrink: 0;
+  }
+
+  .checkout-head h3 { font-size: 1.1rem; }
+
+  .checkout-close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent-soft);
+    color: var(--ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .checkout-close:hover { background: var(--accent-border); }
+
+  .inspire-body h4 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    margin: 16px 0 6px;
+    font-weight: 700;
+  }
+
+  .inspire-body h4:first-child { margin-top: 0; }
+
+  .inspire-body p {
+    font-size: 0.92rem;
+    color: var(--text);
+  }
+
+  .checkout-note {
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    margin-top: 16px;
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+  }
+
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .footer-inner p { color: var(--text-dim); font-size: 0.85rem; }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    transition: color var(--ease);
+  }
+
+  .footer-links a:hover { color: var(--text); }
+
+  /* ---------- Back to top ---------- */
+  .back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    box-shadow: 0 10px 24px rgba(17, 17, 17, 0.25);
+    transition: opacity var(--ease), transform var(--ease), background var(--ease);
+    z-index: 900;
+  }
+
+  .back-to-top:hover { background: var(--accent); }
+
+  .back-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html#top" class="logo">
+      <img class="logo-mark" src="logo.png" alt="" />
+      Steve
+    </a>
+
+    <nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#source"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>Source Code</a></li>
+        <li><a href="index.html#projects"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><path d="M8 10v4"/><path d="M12 10v2"/><path d="M16 10v6"/></svg>Projects</a></li>
+        <li><a href="index.html#ebooks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>E-books</a></li>
+        <li><a href="index.html#about"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>About</a></li>
+        <li><a href="inspiration.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>Inspiration</a></li>
+        <li><a href="index.html#contact"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>Contact</a></li>
+        <li><a href="index.html#support" class="nav-support"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/></svg>Support me</a></li>
+      </ul>
+    </nav>
+
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="inspiration-hero">
+    <div class="container">
+      <span class="section-tag">What drives the work</span>
+      <h1>My inspiration <span class="accent-text">tree</span></h1>
+      <p class="inspiration-quote">"Hustle in silence. Grind through doubt. Time won't wait — execute."</p>
+    </div>
+  </section>
+
+  <section class="tree-section">
+    <div class="container">
+      <div class="tree-wrap reveal">
+        <svg class="tree-svg" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M450,530 C456,478 444,400 450,330" />
+          <path d="M450,330 C380,300 230,260 165,215" />
+          <path d="M450,330 C520,300 670,260 735,215" />
+          <path d="M450,330 C450,290 450,190 450,120" />
+
+          <path d="M165,215 L130,180" />
+          <path d="M165,215 L145,252" />
+          <path d="M165,215 L198,175" />
+
+          <path d="M735,215 L770,180" />
+          <path d="M735,215 L755,252" />
+          <path d="M735,215 L702,175" />
+
+          <path d="M450,120 L420,83" />
+          <path d="M450,120 L450,73" />
+          <path d="M450,120 L480,83" />
+
+          <path d="M450,530 L408,568" />
+          <path d="M450,530 L450,578" />
+          <path d="M450,530 L492,568" />
+        </svg>
+
+        <button type="button" class="tree-node" style="left:18.3%; top:33.6%;" data-id="ali">
+          <img src="inspiration-ali.jpg" alt="Muhammad Ali" />
+          <span>Muhammad Ali</span>
+        </button>
+
+        <button type="button" class="tree-node" style="left:50%; top:18.75%;" data-id="jobs">
+          <img src="inspiration-jobs.jpg" alt="Steve Jobs" />
+          <span>Steve Jobs</span>
+        </button>
+
+        <button type="button" class="tree-node" style="left:81.7%; top:33.6%;" data-id="musk">
+          <img src="inspiration-musk.jpg" alt="Elon Musk" />
+          <span>Elon Musk</span>
+        </button>
+
+        <button type="button" class="tree-node tree-trunk" style="left:50%; top:82.8%;" data-id="steve">
+          <img src="profile.png" alt="Steve" />
+          <span>Steve</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- INSPIRATION MODAL -->
+<div class="checkout-overlay" id="inspireOverlay" aria-hidden="true">
+  <div class="checkout-box" role="dialog" aria-modal="true" aria-labelledby="inspireName">
+    <div class="checkout-head">
+      <div class="checkout-head-info">
+        <img id="inspireAvatar" src="" alt="" />
+        <h3 id="inspireName"></h3>
+      </div>
+      <button type="button" class="checkout-close" id="inspireClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="inspire-body">
+      <h4>About</h4>
+      <p id="inspireAbout"></p>
+      <h4 id="inspireWhyLabel">Why they inspire me</h4>
+      <p id="inspireWhy"></p>
+      <p class="checkout-note" id="inspireCredit"></p>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container footer-inner">
+    <p id="copyright">&copy; 2026 Steve. All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html#source">Source Code</a></li>
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="index.html#ebooks">E-books</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="inspiration.html">Inspiration</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+<script>
+(function () {
+  "use strict";
+
+  var inspirations = {
+    ali: {
+      name: "Muhammad Ali",
+      img: "inspiration-ali.jpg",
+      about: "Three-time world heavyweight boxing champion and Olympic gold medalist, known as much for his self-belief and showmanship as for his fights.",
+      whyLabel: "Why they inspire me",
+      why: "He trained in the dark long before anyone was watching and spoke like a champion before he became one. That's the hustle I try to carry into every project — put in the grind first, let the confidence follow.",
+      credit: "Photo: Stanley Weston, public domain, via Wikimedia Commons."
+    },
+    jobs: {
+      name: "Steve Jobs",
+      img: "inspiration-jobs.jpg",
+      about: "Co-founder of Apple who obsessed over design, simplicity, and shipping products that felt inevitable once you used them.",
+      whyLabel: "Why they inspire me",
+      why: "He cared about the details most people skip. That's the standard I hold my own code and products to — function and feel, both non-negotiable.",
+      credit: "Photo: Matthew Yohe, CC BY-SA 3.0, via Wikimedia Commons."
+    },
+    musk: {
+      name: "Elon Musk",
+      img: "inspiration-musk.jpg",
+      about: "Entrepreneur behind Tesla, SpaceX, and several other companies, built on long bets and relentless execution speed.",
+      whyLabel: "Why they inspire me",
+      why: "He turns impossible timelines into shipped products through sheer execution. It's a reminder that ideas are cheap — the grind of actually building is what counts.",
+      credit: "Photo: Steve Jurvetson, CC BY 2.0, via Wikimedia Commons."
+    },
+    steve: {
+      name: "Steve",
+      img: "profile.png",
+      about: "Full Stack Developer building real products — e-commerce storefronts, admin dashboards, investment platforms — one shipped feature at a time.",
+      whyLabel: "My mindset",
+      why: "Hustle in silence. Grind through doubt. Time won't wait — execute.",
+      credit: ""
+    }
+  };
+
+  /* ---------- Inspiration modal ---------- */
+  var inspireOverlay = document.getElementById("inspireOverlay");
+  var inspireClose = document.getElementById("inspireClose");
+  var inspireAvatar = document.getElementById("inspireAvatar");
+  var inspireName = document.getElementById("inspireName");
+  var inspireAbout = document.getElementById("inspireAbout");
+  var inspireWhyLabel = document.getElementById("inspireWhyLabel");
+  var inspireWhy = document.getElementById("inspireWhy");
+  var inspireCredit = document.getElementById("inspireCredit");
+
+  function openInspire(entry) {
+    inspireAvatar.src = entry.img;
+    inspireAvatar.alt = entry.name;
+    inspireName.textContent = entry.name;
+    inspireAbout.textContent = entry.about;
+    inspireWhyLabel.textContent = entry.whyLabel;
+    inspireWhy.textContent = entry.why;
+    inspireCredit.textContent = entry.credit;
+    inspireCredit.style.display = entry.credit ? "" : "none";
+    inspireOverlay.classList.add("open");
+    inspireOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeInspire() {
+    inspireOverlay.classList.remove("open");
+    inspireOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  document.querySelectorAll(".tree-node").forEach(function (node) {
+    node.addEventListener("click", function () {
+      var entry = inspirations[node.getAttribute("data-id")];
+      if (entry) { openInspire(entry); }
+    });
+  });
+
+  inspireClose.addEventListener("click", closeInspire);
+  inspireOverlay.addEventListener("click", function (e) {
+    if (e.target === inspireOverlay) { closeInspire(); }
+  });
+
+  /* ---------- Navbar scroll state ---------- */
+  var navbar = document.getElementById("navbar");
+  var backToTop = document.getElementById("backToTop");
+
+  function onScroll() {
+    var scrolled = window.scrollY > 10;
+    navbar.classList.toggle("scrolled", scrolled);
+    backToTop.classList.toggle("visible", window.scrollY > 500);
+  }
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  backToTop.addEventListener("click", function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  /* ---------- Mobile nav toggle ---------- */
+  var navToggle = document.getElementById("navToggle");
+  var navLinks = document.getElementById("navLinks");
+
+  navToggle.addEventListener("click", function () {
+    var isOpen = navLinks.classList.toggle("open");
+    navToggle.classList.toggle("open", isOpen);
+    navToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  navLinks.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      navLinks.classList.remove("open");
+      navToggle.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+
+  /* ---------- Reveal on scroll ---------- */
+  var revealObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".reveal").forEach(function (el) {
+    revealObserver.observe(el);
+  });
+
+  /* ---------- Footer year ---------- */
+  document.getElementById("copyright").textContent =
+    "© " + new Date().getFullYear() + " Steve. All rights reserved.";
+})();
+</script>
+
+</body>
+</html>
