@@ -998,6 +998,58 @@
 
   .checkout-download.show { display: block; }
 
+  /* ---------- Support modal ---------- */
+  .support-amount-box {
+    background: #fbf9f4;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+  }
+
+  .support-amount-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .support-amount-currency {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-dim);
+  }
+
+  .support-amount-display input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text);
+    font-family: inherit;
+  }
+
+  .support-amount-display input:focus { outline: none; }
+
+  .support-amount-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .support-amount-chips .support-chip {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .support-amount-chips .support-chip.is-active {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+    background: var(--accent-soft);
+  }
+
   /* ---------- E-book 3D cover ---------- */
   .book-stage {
     height: 180px;
@@ -1493,6 +1545,41 @@
     </div>
   </div>
 
+  <!-- SUPPORT MODAL -->
+  <div class="checkout-overlay" id="supportOverlay" aria-hidden="true">
+    <div class="checkout-box" role="dialog" aria-modal="true" aria-labelledby="supportTitle">
+      <div class="checkout-head">
+        <h3 id="supportTitle">Support Steve</h3>
+        <button type="button" class="checkout-close" id="supportClose" aria-label="Close">&times;</button>
+      </div>
+
+      <div class="support-amount-box">
+        <div class="support-amount-display">
+          <span class="support-amount-currency">₦</span>
+          <input type="number" id="supportAmountInput" min="0" step="100" value="0" inputmode="numeric" />
+        </div>
+        <div class="support-amount-chips">
+          <button type="button" class="support-chip" data-amount="2000">₦2,000</button>
+          <button type="button" class="support-chip" data-amount="5000">₦5,000</button>
+          <button type="button" class="support-chip" data-amount="10000">₦10,000</button>
+          <button type="button" class="support-chip" data-amount="20000">₦20,000</button>
+        </div>
+      </div>
+
+      <div class="checkout-fields">
+        <div class="field">
+          <input type="email" id="supportEmail" placeholder="Email" required />
+        </div>
+        <div class="field">
+          <input type="text" id="supportName" placeholder="Name (optional)" />
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-accent checkout-pay-btn" id="supportPayBtn">Support</button>
+      <p class="form-status checkout-status" id="supportStatus"></p>
+    </div>
+  </div>
+
   <!-- CONNECT -->
   <section id="connect">
     <div class="container">
@@ -1577,12 +1664,12 @@
           </h2>
           <p>If a project, a guide, or a piece of code here helped you, chip in whatever you like.</p>
         </div>
-        <div class="support-actions" aria-label="Support with">
-          <button type="button" class="support-chip">₦2,000</button>
-          <button type="button" class="support-chip">₦5,000</button>
-          <button type="button" class="support-chip">₦10,000</button>
-          <button type="button" class="support-chip">₦20,000</button>
-          <button type="button" class="support-chip is-other">Other</button>
+        <div class="support-actions" aria-label="Support with" id="supportActions">
+          <button type="button" class="support-chip" data-amount="2000">₦2,000</button>
+          <button type="button" class="support-chip" data-amount="5000">₦5,000</button>
+          <button type="button" class="support-chip" data-amount="10000">₦10,000</button>
+          <button type="button" class="support-chip" data-amount="20000">₦20,000</button>
+          <button type="button" class="support-chip is-other" data-amount="0">Other</button>
         </div>
       </div>
     </div>
@@ -1667,12 +1754,12 @@
       description: "A visual, beginner-friendly guide to reading candlesticks, the 10 most common candlestick patterns, support & resistance, trend direction, and continuation/reversal chart patterns.",
       format: "E-book · PDF",
       cover: "ebook-cover.jpg",
-      price: "₦7,000",
-      amount: 700000,
+      price: "₦4,000",
+      amount: 400000,
       file: "go2plug-candlestick-handbook.pdf",
       link: "mailto:ebiesuwaoluwatobi@gmail.com?subject=" +
-        encodeURIComponent("Go2plug Candlestick Handbook — Purchase (₦7,000)") +
-        "&body=" + encodeURIComponent("Hi Steve,\n\nI'd like to buy the Go2plug Candlestick & Chart Patterns Handbook for ₦7,000.\n\nPlease send payment details.\n\nThanks!")
+        encodeURIComponent("Go2plug Candlestick Handbook — Purchase (₦4,000)") +
+        "&body=" + encodeURIComponent("Hi Steve,\n\nI'd like to buy the Go2plug Candlestick & Chart Patterns Handbook for ₦4,000.\n\nPlease send payment details.\n\nThanks!")
     }
   ];
 
@@ -1864,6 +1951,110 @@
       onClose: function () {
         checkoutStatus.textContent = "Payment cancelled.";
         checkoutStatus.className = "form-status checkout-status";
+      }
+    });
+    handler.openIframe();
+  });
+
+  /* ---------- Support modal ---------- */
+  var supportOverlay = document.getElementById("supportOverlay");
+  var supportClose = document.getElementById("supportClose");
+  var supportActions = document.getElementById("supportActions");
+  var supportAmountInput = document.getElementById("supportAmountInput");
+  var supportAmountChips = document.querySelectorAll("#supportOverlay .support-amount-chips .support-chip");
+  var supportEmail = document.getElementById("supportEmail");
+  var supportName = document.getElementById("supportName");
+  var supportPayBtn = document.getElementById("supportPayBtn");
+  var supportStatus = document.getElementById("supportStatus");
+
+  function setSupportAmount(amount) {
+    supportAmountInput.value = amount > 0 ? amount : "";
+    supportAmountChips.forEach(function (chip) {
+      chip.classList.toggle("is-active", Number(chip.getAttribute("data-amount")) === amount);
+    });
+  }
+
+  function openSupportModal(amount) {
+    setSupportAmount(amount || 0);
+    supportEmail.value = "";
+    supportName.value = "";
+    supportStatus.textContent = "";
+    supportStatus.className = "form-status checkout-status";
+    supportPayBtn.style.display = "";
+    supportOverlay.classList.add("open");
+    supportOverlay.setAttribute("aria-hidden", "false");
+    if (!amount) { supportAmountInput.focus(); }
+  }
+
+  function closeSupportModal() {
+    supportOverlay.classList.remove("open");
+    supportOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  supportActions.addEventListener("click", function (e) {
+    var btn = e.target.closest(".support-chip");
+    if (!btn) { return; }
+    openSupportModal(Number(btn.getAttribute("data-amount")) || 0);
+  });
+
+  supportAmountChips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      setSupportAmount(Number(chip.getAttribute("data-amount")));
+    });
+  });
+
+  supportAmountInput.addEventListener("input", function () {
+    var typed = Number(supportAmountInput.value);
+    supportAmountChips.forEach(function (chip) {
+      chip.classList.toggle("is-active", Number(chip.getAttribute("data-amount")) === typed);
+    });
+  });
+
+  supportClose.addEventListener("click", closeSupportModal);
+  supportOverlay.addEventListener("click", function (e) {
+    if (e.target === supportOverlay) { closeSupportModal(); }
+  });
+
+  supportPayBtn.addEventListener("click", function () {
+    var email = supportEmail.value.trim();
+    var amount = Number(supportAmountInput.value);
+
+    if (!amount || amount <= 0) {
+      supportStatus.textContent = "Enter an amount to continue.";
+      supportStatus.className = "form-status checkout-status error";
+      return;
+    }
+    if (!email) {
+      supportStatus.textContent = "Enter your email to continue.";
+      supportStatus.className = "form-status checkout-status error";
+      return;
+    }
+
+    if (!PAYSTACK_PUBLIC_KEY || typeof PaystackPop === "undefined") {
+      supportStatus.textContent = "Card payment isn't set up yet — try again later.";
+      supportStatus.className = "form-status checkout-status error";
+      return;
+    }
+
+    var handler = PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: email,
+      amount: amount * 100,
+      currency: "NGN",
+      ref: "support_" + Date.now(),
+      metadata: {
+        custom_fields: [
+          { display_name: "Name", variable_name: "name", value: supportName.value.trim() || "N/A" }
+        ]
+      },
+      callback: function () {
+        supportStatus.textContent = "Thank you for the support — check your email for the receipt.";
+        supportStatus.className = "form-status checkout-status success";
+        supportPayBtn.style.display = "none";
+      },
+      onClose: function () {
+        supportStatus.textContent = "Payment cancelled.";
+        supportStatus.className = "form-status checkout-status";
       }
     });
     handler.openIframe();
