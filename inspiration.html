@@ -344,18 +344,36 @@
     stroke-width: 4;
     stroke-linecap: round;
     opacity: 0.55;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tree-svg path { stroke-dashoffset: 0 !important; transition: none !important; }
+    .tree-node-inner { opacity: 1 !important; transform: none !important; transition: none !important; }
   }
 
   .tree-node {
     position: absolute;
     transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .tree-node-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    background: none;
-    border: none;
-    padding: 0;
+    opacity: 0;
+    transform: translateY(16px) scale(0.9);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  .tree-node-inner.in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   .tree-node img {
@@ -613,46 +631,38 @@
     <div class="container">
       <div class="tree-wrap reveal">
         <svg class="tree-svg" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <path d="M450,530 C456,478 444,400 450,330" />
-          <path d="M450,330 C380,300 230,260 165,215" />
-          <path d="M450,330 C520,300 670,260 735,215" />
-          <path d="M450,330 C450,290 450,190 450,120" />
-
-          <path d="M165,215 L130,180" />
-          <path d="M165,215 L145,252" />
-          <path d="M165,215 L198,175" />
-
-          <path d="M735,215 L770,180" />
-          <path d="M735,215 L755,252" />
-          <path d="M735,215 L702,175" />
-
-          <path d="M450,120 L420,83" />
-          <path d="M450,120 L450,73" />
-          <path d="M450,120 L480,83" />
-
-          <path d="M450,530 L408,568" />
-          <path d="M450,530 L450,578" />
-          <path d="M450,530 L492,568" />
+          <path id="tree-path-trunk" d="M450,530 C456,478 444,400 450,330 M450,530 L408,568 M450,530 L450,578 M450,530 L492,568" />
+          <path id="tree-path-ali" d="M450,330 C380,300 230,260 165,215 M165,215 L130,180 M165,215 L145,252 M165,215 L198,175" />
+          <path id="tree-path-jobs" d="M450,330 C450,290 450,190 450,120 M450,120 L420,83 M450,120 L450,73 M450,120 L480,83" />
+          <path id="tree-path-musk" d="M450,330 C520,300 670,260 735,215 M735,215 L770,180 M735,215 L755,252 M735,215 L702,175" />
         </svg>
 
         <button type="button" class="tree-node" style="left:18.3%; top:33.6%;" data-id="ali">
-          <img src="inspiration-ali.jpg" alt="Muhammad Ali" />
-          <span>Muhammad Ali</span>
+          <span class="tree-node-inner">
+            <img src="inspiration-ali.jpg" alt="Muhammad Ali" />
+            <span>Muhammad Ali</span>
+          </span>
         </button>
 
         <button type="button" class="tree-node" style="left:50%; top:18.75%;" data-id="jobs">
-          <img src="inspiration-jobs.jpg" alt="Steve Jobs" />
-          <span>Steve Jobs</span>
+          <span class="tree-node-inner">
+            <img src="inspiration-jobs.jpg" alt="Steve Jobs" />
+            <span>Steve Jobs</span>
+          </span>
         </button>
 
         <button type="button" class="tree-node" style="left:81.7%; top:33.6%;" data-id="musk">
-          <img src="inspiration-musk.jpg" alt="Elon Musk" />
-          <span>Elon Musk</span>
+          <span class="tree-node-inner">
+            <img src="inspiration-musk.jpg" alt="Elon Musk" />
+            <span>Elon Musk</span>
+          </span>
         </button>
 
         <button type="button" class="tree-node tree-trunk" style="left:50%; top:82.8%;" data-id="steve">
-          <img src="profile.png" alt="Steve" />
-          <span>Steve</span>
+          <span class="tree-node-inner">
+            <img src="profile.png" alt="Steve" />
+            <span>Steve</span>
+          </span>
         </button>
       </div>
     </div>
@@ -822,6 +832,52 @@
   document.querySelectorAll(".reveal").forEach(function (el) {
     revealObserver.observe(el);
   });
+
+  /* ---------- Tree draw-in animation ---------- */
+  function drawPath(path, duration, delay) {
+    if (!path) { return; }
+    var len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    path.getBoundingClientRect();
+    path.style.transition = "stroke-dashoffset " + duration + "ms ease " + delay + "ms";
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        path.style.strokeDashoffset = "0";
+      });
+    });
+  }
+
+  function showNode(id, delay) {
+    var inner = document.querySelector('.tree-node[data-id="' + id + '"] .tree-node-inner');
+    if (!inner) { return; }
+    setTimeout(function () { inner.classList.add("in"); }, delay);
+  }
+
+  function animateTree() {
+    drawPath(document.getElementById("tree-path-trunk"), 550, 0);
+    drawPath(document.getElementById("tree-path-ali"), 800, 400);
+    drawPath(document.getElementById("tree-path-jobs"), 800, 550);
+    drawPath(document.getElementById("tree-path-musk"), 800, 700);
+
+    showNode("steve", 150);
+    showNode("ali", 1150);
+    showNode("jobs", 1300);
+    showNode("musk", 1450);
+  }
+
+  var treeWrap = document.querySelector(".tree-wrap");
+  if (treeWrap) {
+    var treeObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateTree();
+          treeObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    treeObserver.observe(treeWrap);
+  }
 
   /* ---------- Footer year ---------- */
   document.getElementById("copyright").textContent =
