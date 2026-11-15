@@ -619,7 +619,7 @@
     <div class="container">
       <span class="section-tag">What drives the work</span>
       <h1>My inspiration <span class="accent-text">tree</span></h1>
-      <p class="inspiration-quote">"Hustle in silence. Grind through doubt. Time won't wait — execute."</p>
+      <p class="inspiration-quote">"Hustle in silence. Grind through doubt. Time won't wait, so execute."</p>
     </div>
   </section>
 
@@ -678,7 +678,6 @@
       <p id="inspireAbout"></p>
       <h4 id="inspireWhyLabel">Why they inspire me</h4>
       <p id="inspireWhy"></p>
-      <p class="checkout-note" id="inspireCredit"></p>
     </div>
   </div>
 </div>
@@ -709,32 +708,28 @@
       img: "inspiration-ali.jpg",
       about: "Three-time world heavyweight boxing champion and Olympic gold medalist, known as much for his self-belief and showmanship as for his fights.",
       whyLabel: "Why they inspire me",
-      why: "He trained in the dark long before anyone was watching and spoke like a champion before he became one. That's the hustle I try to carry into every project — put in the grind first, let the confidence follow.",
-      credit: "Photo: Stanley Weston, public domain, via Wikimedia Commons."
+      why: "He trained in the dark long before anyone was watching and spoke like a champion before he became one. That's the hustle I try to carry into every project: put in the grind first, then let the confidence follow."
     },
     jobs: {
       name: "Steve Jobs",
       img: "inspiration-jobs.jpg",
       about: "Co-founder of Apple who obsessed over design, simplicity, and shipping products that felt inevitable once you used them.",
       whyLabel: "Why they inspire me",
-      why: "He cared about the details most people skip. That's the standard I hold my own code and products to — function and feel, both non-negotiable.",
-      credit: "Photo: Matthew Yohe, CC BY-SA 3.0, via Wikimedia Commons."
+      why: "He cared about the details most people skip. That's the standard I hold my own code and products to: function and feel, both non-negotiable."
     },
     musk: {
       name: "Elon Musk",
       img: "inspiration-musk.jpg",
       about: "Entrepreneur behind Tesla, SpaceX, and several other companies, built on long bets and relentless execution speed.",
       whyLabel: "Why they inspire me",
-      why: "He turns impossible timelines into shipped products through sheer execution. It's a reminder that ideas are cheap — the grind of actually building is what counts.",
-      credit: "Photo: Steve Jurvetson, CC BY 2.0, via Wikimedia Commons."
+      why: "He turns impossible timelines into shipped products through sheer execution. It's a reminder that ideas are cheap; the grind of actually building is what counts."
     },
     steve: {
       name: "Steve",
       img: "profile.png",
-      about: "Full Stack Developer building real products — e-commerce storefronts, admin dashboards, investment platforms — one shipped feature at a time.",
+      about: "Full Stack Developer building real products: e-commerce storefronts, admin dashboards, investment platforms, one shipped feature at a time.",
       whyLabel: "My mindset",
-      why: "Hustle in silence. Grind through doubt. Time won't wait — execute.",
-      credit: ""
+      why: "Hustle in silence. Grind through doubt. Time won't wait, so execute."
     }
   };
 
@@ -746,7 +741,6 @@
   var inspireAbout = document.getElementById("inspireAbout");
   var inspireWhyLabel = document.getElementById("inspireWhyLabel");
   var inspireWhy = document.getElementById("inspireWhy");
-  var inspireCredit = document.getElementById("inspireCredit");
 
   function openInspire(entry) {
     inspireAvatar.src = entry.img;
@@ -755,8 +749,6 @@
     inspireAbout.textContent = entry.about;
     inspireWhyLabel.textContent = entry.whyLabel;
     inspireWhy.textContent = entry.why;
-    inspireCredit.textContent = entry.credit;
-    inspireCredit.style.display = entry.credit ? "" : "none";
     inspireOverlay.classList.add("open");
     inspireOverlay.setAttribute("aria-hidden", "false");
   }
